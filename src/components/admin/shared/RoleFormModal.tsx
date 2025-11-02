@@ -278,6 +278,26 @@ export const RoleFormModal = React.forwardRef<HTMLDivElement, RoleFormModalProps
         }
 
         const result = await response.json()
+
+        // Emit event for real-time sync
+        if (mode === 'create') {
+          globalEventEmitter.emit('role:created', {
+            roleId: result.id,
+            name: formData.name,
+            description: formData.description,
+            permissions: formData.permissions,
+            timestamp: Date.now(),
+          })
+        } else {
+          globalEventEmitter.emit('role:updated', {
+            roleId: initialData?.id,
+            name: formData.name,
+            description: formData.description,
+            permissions: formData.permissions,
+            timestamp: Date.now(),
+          })
+        }
+
         toast.success(
           mode === 'create'
             ? 'Role created successfully'
