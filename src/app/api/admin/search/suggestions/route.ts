@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withAdminAuth } from '@/lib/auth-middleware'
 import { advancedSearchService } from '@/services/advanced-search.service'
 
+export const dynamic = 'force-dynamic'
+
 export const GET = withAdminAuth(async (req: NextRequest) => {
   try {
     const { searchParams } = new URL(req.url)
