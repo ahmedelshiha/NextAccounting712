@@ -41,6 +41,17 @@ export interface UserItem {
   status?: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
   permissions?: string[]
   notes?: string
+  // New fields from database
+  tier?: 'INDIVIDUAL' | 'SMB' | 'ENTERPRISE'
+  workingHours?: Record<string, { start: string; end: string }>
+  bookingBuffer?: number
+  autoAssign?: boolean
+  certifications?: string[]
+  experienceYears?: number
+  department?: string
+  position?: string
+  skills?: string[]
+  hourlyRate?: number
 }
 
 export interface HealthLog {
