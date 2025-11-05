@@ -84,14 +84,14 @@ function logFeatureFlagEvent(event: string, data?: Record<string, unknown>) {
  */
 function trackFeatureFlagMetric(metricName: string, value: number) {
   const config = getFeatureFlagConfig()
-  
+
   if (!config.perfTrackingEnabled) return
 
   // Could send to Sentry, DataDog, or other APM tool
   // For now, just log it
-  if (typeof window !== 'undefined' && window.__SENTRY__) {
+  if (typeof window !== 'undefined' && (window as any).__SENTRY__) {
     // Send to Sentry if available
-    // window.__SENTRY__.captureMessage(`workstation_metric: ${metricName} = ${value}`)
+    // (window as any).__SENTRY__.captureMessage(`workstation_metric: ${metricName} = ${value}`)
   }
 }
 

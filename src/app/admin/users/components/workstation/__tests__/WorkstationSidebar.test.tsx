@@ -30,5 +30,8 @@ test('WorkstationSidebar shows quick stats and filters sections', () => {
   // Saved views buttons render counts (total included)
   const rendered = (globalThis as any).__renderedHtml || ''
   expect(rendered).toContain('Total Users')
-  expect(rendered).toContain('Saved Views') || true
+  // Saved Views button should be rendered
+  if (rendered) {
+    expect(rendered).toContain('Saved Views')
+  }
 })
