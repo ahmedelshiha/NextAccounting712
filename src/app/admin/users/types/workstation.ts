@@ -42,13 +42,10 @@ export interface WorkstationInsightsPanelProps {
 // State & Context Types
 export interface UserFilters {
   search?: string
-  roleFilter?: string | string[]
-  statusFilter?: string | string[]
-  departmentFilter?: string | string[]
-  dateRange?: {
-    from?: Date
-    to?: Date
-  }
+  role?: string
+  status?: string
+  department?: string
+  dateRange?: 'all' | 'today' | 'week' | 'month'
 }
 
 export interface QuickStatsData {
