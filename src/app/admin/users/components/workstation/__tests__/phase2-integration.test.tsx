@@ -257,11 +257,9 @@ describe('Phase 2: Workstation Integration Tests', () => {
         </WorkstationTestWrapper>
       )
 
-      // Look for stats display
-      // The exact text depends on QuickStatsCard implementation
-      // Common labels: "Total Users", "Active", "Pending", etc.
-      const pageText = document.body.textContent
-      expect(pageText).toContain('Quick Stats')
+      // Verify quick stats section is visible
+      expect(screen.queryByTestId('quick-stats-section')).toBeInTheDocument()
+      expect(screen.queryByTestId('stats-container')).toBeInTheDocument()
     })
 
     it('should update stats when data changes', async () => {
