@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { WorkstationSidebarProps } from '../../types/workstation'
+import './workstation.css'
 
 /**
  * WorkstationSidebar Component
