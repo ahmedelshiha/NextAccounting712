@@ -90,13 +90,13 @@ describe('OverviewCards', () => {
         { id: '3', status: 'ACTIVE' }
       ]
 
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users,
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Total Users: 3')).toBeInTheDocument()
@@ -110,13 +110,13 @@ describe('OverviewCards', () => {
         { id: '3', status: 'INACTIVE' }
       ]
 
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users,
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Pending Approvals: 2')).toBeInTheDocument()
@@ -130,13 +130,13 @@ describe('OverviewCards', () => {
         { id: '3', status: 'ACTIVE' }
       ]
 
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users,
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('In Progress: 2')).toBeInTheDocument()
@@ -144,13 +144,13 @@ describe('OverviewCards', () => {
     })
 
     it('should handle empty user list', async () => {
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: [],
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Total Users: 0')).toBeInTheDocument()
@@ -158,13 +158,13 @@ describe('OverviewCards', () => {
     })
 
     it('should handle undefined users array', async () => {
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: undefined,
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Total Users: 0')).toBeInTheDocument()
@@ -174,13 +174,13 @@ describe('OverviewCards', () => {
 
   describe('Rendering', () => {
     it('should render OperationsOverviewCards component', async () => {
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: [{ id: '1', status: 'ACTIVE' }],
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByTestId('operations-overview-cards')).toBeInTheDocument()
@@ -188,13 +188,13 @@ describe('OverviewCards', () => {
     })
 
     it('should pass isLoading prop to OperationsOverviewCards', async () => {
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: [{ id: '1', status: 'ACTIVE' }],
         isLoading: true,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Loading: true')).toBeInTheDocument()
@@ -202,13 +202,13 @@ describe('OverviewCards', () => {
     })
 
     it('should not show loading state text when not loading', async () => {
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: [{ id: '1', status: 'ACTIVE' }],
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
         expect(screen.getByText('Loading: false')).toBeInTheDocument()
@@ -223,32 +223,32 @@ describe('OverviewCards', () => {
         { id: '2', status: 'ACTIVE' }
       ]
 
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: contextUsers,
         isLoading: false,
         error: null
-      })
+      }
 
-      render(<OverviewCards />)
+      renderWithProvider(<OverviewCards />)
 
       await waitFor(() => {
-        expect(mockUseUsersContext).toHaveBeenCalled()
+        expect(screen.getByText('Total Users: 2')).toBeInTheDocument()
       })
     })
 
     it('should update metrics when context changes', async () => {
-      const { rerender } = render(<OverviewCards />)
+      const { rerender } = renderWithProvider(<OverviewCards />)
 
-      mockUseUsersContext.mockReturnValue({
+      contextValue = {
         users: [
           { id: '1', status: 'ACTIVE' },
           { id: '2', status: 'ACTIVE' }
         ],
         isLoading: false,
         error: null
-      })
+      }
 
-      rerender(<OverviewCards />)
+      rerender(<TestProvider><OverviewCards /></TestProvider>)
 
       await waitFor(() => {
         expect(screen.getByText('Total Users: 2')).toBeInTheDocument()
