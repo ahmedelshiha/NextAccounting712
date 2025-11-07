@@ -285,17 +285,6 @@ export default function BulkActionsPanel({
             justify-content: flex-end;
           }
         }
-          }
-
-          .admin-bulk-actions-clear {
-            color: var(--color-text-secondary-dark, #94a3b8);
-          }
-
-          .admin-bulk-actions-clear:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--color-text-dark, #f1f5f9);
-          }
-        }
       `}</style>
     </div>
   )
