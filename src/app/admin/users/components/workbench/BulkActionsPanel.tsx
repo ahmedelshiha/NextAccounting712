@@ -29,6 +29,7 @@ export default function BulkActionsPanel({
   const [actionType, setActionType] = useState('set-status')
   const [actionValue, setActionValue] = useState('INACTIVE')
   const [isApplying, setIsApplying] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   const handleApply = async () => {
     setIsApplying(true)
