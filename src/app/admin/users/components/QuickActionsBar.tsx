@@ -24,7 +24,6 @@ interface QuickActionsBarProps {
  * - Import (bulk import users)
  * - Export (download user list)
  * - Refresh (reload data)
- * - Audit Trail (settings/gear icon)
  *
  * Features:
  * - Sticky positioning
