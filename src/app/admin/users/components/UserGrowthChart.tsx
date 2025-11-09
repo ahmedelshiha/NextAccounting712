@@ -65,11 +65,11 @@ const UserGrowthChart = memo(function UserGrowthChart({
         {
           label: 'New Users',
           data: displayData.values,
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: '#14b8a6',
+          backgroundColor: 'rgba(20, 184, 166, 0.1)',
           fill: true,
           tension: 0.4,
-          pointBackgroundColor: '#3b82f6',
+          pointBackgroundColor: '#14b8a6',
           pointBorderColor: '#fff',
           pointBorderWidth: 2,
           pointRadius: 5,
@@ -147,7 +147,7 @@ const UserGrowthChart = memo(function UserGrowthChart({
   return (
     <div className="user-growth-chart-container">
       <h3 className="user-growth-chart-title">User Growth</h3>
-      <div className="user-growth-chart-body">
+      <div className="user-growth-chart-body" style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Line data={chartData} options={options} />
       </div>
     </div>

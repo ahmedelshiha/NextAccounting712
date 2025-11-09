@@ -37,13 +37,13 @@ const RoleDistributionChart = memo(function RoleDistributionChart({
   loading = false
 }: RoleDistributionChartProps) {
   const roleColors: Record<string, string> = {
-    ADMIN: '#ef4444',
-    TEAM_LEAD: '#a855f7',
-    TEAM_MEMBER: '#3b82f6',
-    STAFF: '#06b6d4',
-    CLIENT: '#10b981',
-    EDITOR: '#f59e0b',
-    VIEWER: '#6b7280'
+    ADMIN: '#3b82f6',
+    TEAM_LEAD: '#06b6d4',
+    TEAM_MEMBER: '#14b8a6',
+    STAFF: '#10b981',
+    CLIENT: '#8b5cf6',
+    EDITOR: '#06b6d4',
+    VIEWER: '#14b8a6'
   }
 
   const chartData = useMemo(() => {
@@ -125,7 +125,7 @@ const RoleDistributionChart = memo(function RoleDistributionChart({
   return (
     <div className="role-distribution-chart-container">
       <h3 className="role-distribution-chart-title">Role Distribution</h3>
-      <div className="role-distribution-chart-body">
+      <div className="role-distribution-chart-body" style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Doughnut data={chartData} options={options} />
       </div>
     </div>
