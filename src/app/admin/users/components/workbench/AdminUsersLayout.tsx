@@ -230,6 +230,7 @@ export default function AdminUsersLayout() {
                   onViewProfileInline={(user) => {
                     context.setSelectedUser(user)
                     setInlineProfileUser(user)
+                    setSidebarOpen(false)
                   }}
                 />
               </div>
