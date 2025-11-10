@@ -48,7 +48,7 @@ export function SearchSuggestionsDropdown({
   className = ''
 }: SearchSuggestionsDropdownProps) {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1)
-  const suggestionsRef = useRef<(HTMLDivElement | null)[]>([])
+  const suggestionsRef = useRef<(HTMLButtonElement | null)[]>([])
 
   // Handle keyboard navigation
   useEffect(() => {

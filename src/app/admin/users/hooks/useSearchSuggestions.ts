@@ -167,7 +167,7 @@ export function useSearchSuggestions(
 ) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const debounceTimerRef = useRef<NodeJS.Timeout>()
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Memoize extracted terms
   const extractedTerms = useMemo(

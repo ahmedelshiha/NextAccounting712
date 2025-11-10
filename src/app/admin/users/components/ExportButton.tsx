@@ -12,7 +12,7 @@ export interface ExportButtonProps {
   filteredCount?: number
   totalCount?: number
   variant?: 'default' | 'outline'
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'default' | 'icon' | 'sm' | 'lg'
 }
 
 export function ExportButton({

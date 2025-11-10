@@ -16,6 +16,8 @@ import { QueryTemplateManager } from './QueryTemplateManager'
 import { useSearchSuggestions } from '../hooks/useSearchSuggestions'
 import { useFilterPresets } from '../hooks/useFilterPresets'
 import { useQueryBuilder } from '../hooks/useQueryBuilder'
+import { useFilterHistory } from '../hooks/useFilterHistory'
+import { FilterHistoryPanel } from './FilterHistoryPanel'
 import { FilterState } from '../hooks/useFilterState'
 import { UserItem } from '../contexts/UserDataContext'
 import { FilterGroup, FilterCondition } from '../types/query-builder'
@@ -85,6 +87,7 @@ export function UserDirectoryFilterBarEnhanced({
 }: UserDirectoryFilterBarEnhancedProps) {
   const [suggestionsOpen, setSuggestionsOpen] = useState(false)
   const [presetsOpen, setPresetsOpen] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   const { suggestions, isLoading } = useSearchSuggestions(
     allUsers,
@@ -104,6 +107,8 @@ export function UserDirectoryFilterBarEnhanced({
   const queryBuilder = useQueryBuilder()
   const quickFilters = useMemo(() => createDefaultQuickFilters(), [])
 
+  const filterHistory = useFilterHistory()
+
   const hasActiveFilters = !!(
     filters.search ||
     (filters.roles?.length ?? 0) > 0 ||
@@ -114,33 +119,40 @@ export function UserDirectoryFilterBarEnhanced({
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    onFiltersChange({ ...filters, search: value })
+    const next: FilterState = { ...filters, search: value, roles: filters.roles || [], statuses: filters.statuses || [] }
+    onFiltersChange(next)
     setSuggestionsOpen(!!value)
-  }, [filters, onFiltersChange])
+    filterHistory.addEntry(next)
+  }, [filters, onFiltersChange, filterHistory])
 
   const handleSuggestionSelect = useCallback((suggestion: any) => {
-    onFiltersChange({ ...filters, search: suggestion.text })
+    const next: FilterState = { ...filters, search: suggestion.text, roles: filters.roles || [], statuses: filters.statuses || [] }
+    onFiltersChange(next)
     setSuggestionsOpen(false)
   }, [filters, onFiltersChange])
 
   const handleLoadPreset = useCallback((preset: any) => {
     onFiltersChange(preset.filters)
+    filterHistory.addEntry(preset.filters)
     setPresetsOpen(false)
-  }, [onFiltersChange])
+  }, [onFiltersChange, filterHistory])
 
   const handleCreatePreset = useCallback((name: string, filterState: FilterState, description?: string) => {
     createPreset(name, filterState, description)
-  }, [createPreset])
+    filterHistory.addEntry(filterState)
+  }, [createPreset, filterHistory])
 
   const handleApplyQuickFilter = useCallback((filterState: FilterState) => {
     onFiltersChange(filterState)
-  }, [onFiltersChange])
+    filterHistory.addEntry(filterState)
+  }, [onFiltersChange, filterHistory])
 
   const handleApplyAdvancedQuery = useCallback((query: FilterGroup | FilterCondition) => {
-    const filtered = queryBuilder.applyQueryToUsers(allUsers)
+    queryBuilder.applyQueryToUsers(allUsers)
     const simpleFilters = queryBuilder.queryToFilterState()
     onFiltersChange(simpleFilters)
-  }, [queryBuilder, allUsers, onFiltersChange])
+    filterHistory.addEntry(simpleFilters)
+  }, [queryBuilder, allUsers, onFiltersChange, filterHistory])
 
   const handleLoadTemplate = useCallback((template: any) => {
     if (template.query) {
@@ -260,6 +272,20 @@ export function UserDirectoryFilterBarEnhanced({
           </Button>
         )}
 
+        {/* History Button */}
+        <Button
+          onClick={() => setHistoryOpen(!historyOpen)}
+          variant={historyOpen ? 'default' : 'outline'}
+          size="sm"
+          className="text-xs"
+          aria-label="View filter history"
+          title="View recent filters"
+        >
+          {/* Using SVG to avoid additional imports to keep bundle minimal */}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 mr-1"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5h-2"/><path d="M12 7v5l3 2"/></svg>
+          History
+        </Button>
+
         {/* Export Button */}
         {showExport && (
           <ExportButton
@@ -348,6 +374,17 @@ export function UserDirectoryFilterBarEnhanced({
           currentFilters={filters}
         />
       )}
+
+      {/* Filter History Panel */}
+      <FilterHistoryPanel
+        isOpen={historyOpen}
+        onOpenChange={setHistoryOpen}
+        history={filterHistory.history}
+        onReapply={(f) => { const next: FilterState = { search: f.search || '', roles: f.roles || [], statuses: f.statuses || [] }; onFiltersChange(next); filterHistory.addEntry(next); setHistoryOpen(false) }}
+        onClearHistory={() => filterHistory.clearHistory()}
+        onExportHistory={() => filterHistory.exportHistory()}
+        helpers={{ relativeTime: filterHistory.helpers.relativeTime, describeFilters: filterHistory.helpers.describeFilters }}
+      />
     </div>
   )
 }
