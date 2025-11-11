@@ -239,8 +239,7 @@ export function sanitizePresets(presets: ServerFilterPreset[]): ServerFilterPres
     .filter((p): p is ServerFilterPreset => {
       return p !== null &&
         typeof p === 'object' &&
-        'id' in p && 'name' in p && 'filters' in p && 'createdAt' in p && 'updatedAt' in p &&
-        (p as any).description !== undefined
+        'id' in p && 'name' in p && 'filters' in p && 'createdAt' in p && 'updatedAt' in p
     })
 }
 
