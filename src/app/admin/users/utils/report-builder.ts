@@ -395,11 +395,11 @@ function generateGroupedTableRows(
     {} as Record<string, any[]>
   )
 
-  Object.entries(grouped).forEach(([groupValue, groupRows]) => {
+  Object.entries(grouped).forEach(([groupValue, groupRows]: [string, any[]]) => {
     const escapedGroupValue = escapeHTMLChars(String(groupValue))
     html += `<tr class="group-header"><td colspan="${columns.length}">${escapedGroupValue}</td></tr>`
 
-    (groupRows as Array<Record<string, unknown>>).forEach(row => {
+    groupRows.forEach(row => {
       html += '<tr>'
       columns.forEach(col => {
         const value = row[col.name] || ''
