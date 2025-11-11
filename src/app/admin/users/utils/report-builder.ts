@@ -395,8 +395,8 @@ function generateGroupedTableRows(
     {} as Record<string, any[]>
   )
 
-  Object.entries(grouped).forEach(([groupValue, groupRows]: [string, unknown[]]) => {
-    const escapedGroupValue = escapeHTMLChars(groupValue as string)
+  Object.entries(grouped).forEach(([groupValue, groupRows]) => {
+    const escapedGroupValue = escapeHTMLChars(String(groupValue))
     html += `<tr class="group-header"><td colspan="${columns.length}">${escapedGroupValue}</td></tr>`
 
     (groupRows as Array<Record<string, unknown>>).forEach(row => {
