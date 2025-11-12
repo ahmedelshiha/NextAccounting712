@@ -37,7 +37,7 @@ export const GET = withTenantContext(async (request: NextRequest) => {
     }
 
     // Parse query filters
-    const queryParams = Object.fromEntries(request.nextUrl.searchParams)
+    const queryParams = Object.fromEntries(request.nextUrl.searchParams) as Record<string, string>
     const filters = FilterSchema.parse(queryParams)
 
     // Build where clause
