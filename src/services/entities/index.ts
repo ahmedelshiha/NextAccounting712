@@ -30,7 +30,8 @@ export class EntityService {
       logger.info(`Creating entity for tenant ${tenantId}`, { input });
 
       // Validate input
-      const country = getCountry(input.country);
+      const countryCode = input.country as any;
+      const country = getCountry(countryCode);
       if (!country) {
         throw new Error(`Invalid country code: ${input.country}`);
       }
