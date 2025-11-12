@@ -3,7 +3,7 @@ import { withTenantContext } from "@/lib/api-wrapper";
 import { requireTenantContext } from "@/lib/tenant-utils";
 import { entityService } from "@/services/entities";
 import { logger } from "@/lib/logger";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { z } from "zod";
 import crypto from "crypto";
 
@@ -81,7 +81,7 @@ const _api_POST = async (request: NextRequest) => {
           licenseNumber: input.licenseNumber,
           economicZoneId: input.economicZoneId,
         }] : undefined,
-        registrations: input.registrations || [],
+        registrations: (input.registrations as any) || [],
       }
     );
 
@@ -153,7 +153,7 @@ const _api_POST = async (request: NextRequest) => {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       );
     }

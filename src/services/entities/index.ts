@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import {
   EntityCreateInput,
   EntityUpdateInput,
@@ -30,7 +30,8 @@ export class EntityService {
       logger.info(`Creating entity for tenant ${tenantId}`, { input });
 
       // Validate input
-      const country = getCountry(input.country);
+      const countryCode = input.country as any;
+      const country = getCountry(countryCode);
       if (!country) {
         throw new Error(`Invalid country code: ${input.country}`);
       }
@@ -109,7 +110,7 @@ export class EntityService {
 
         // Create default obligations for country
         const defaultObligations = getObligations(
-          input.country,
+          countryCode,
           input.entityType || "company"
         );
         await Promise.all(
@@ -118,9 +119,9 @@ export class EntityService {
               data: {
                 entityId: newEntity.id,
                 type: obligation.type,
-                country: input.country,
+                country: countryCode,
                 frequency: obligation.frequency,
-                ruleConfig: obligation.ruleConfig || {},
+                ruleConfig: obligation.rules || {},
                 active: true,
               },
             })

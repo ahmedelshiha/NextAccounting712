@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import useSWR from "swr";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +10,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import {
   Search,
-  CheckCircle2,
-  AlertCircle,
   Clock,
   FileText,
   Users,
@@ -32,13 +30,6 @@ interface Entity {
   status: string;
 }
 
-interface VerificationStatus {
-  entityId: string;
-  status: "pending" | "verified" | "failed";
-  estimatedTime?: string;
-  lastUpdate?: string;
-}
-
 interface UpcomingCompliance {
   id: string;
   type: string;
@@ -47,6 +38,8 @@ interface UpcomingCompliance {
   status: string;
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -54,51 +47,35 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch user's entities
-  const { data: entities = [], isLoading: entitiesLoading } = useQuery<Entity[]>({
-    queryKey: ["entities"],
-    queryFn: async () => {
-      const response = await fetch("/api/entities");
-      if (!response.ok) throw new Error("Failed to fetch entities");
-      const result = await response.json();
-      return result.data || [];
-    },
+  const { data: entitiesResponse, isLoading: entitiesLoading } = useSWR<{
+    success: boolean;
+    data: Entity[];
+  }>("/api/entities", fetcher, {
+    revalidateOnFocus: false,
   });
 
-  // Fetch verification status if entity is pending setup
+  const entities = entitiesResponse?.data || [];
   const primaryEntity = entities[0];
-  const { data: verificationStatus } = useQuery({
-    queryKey: ["verification-status", primaryEntity?.id],
-    queryFn: async () => {
-      if (!primaryEntity?.id) return null;
-      const response = await fetch(`/api/entities/${primaryEntity.id}/setup-status`);
-      if (!response.ok) return null;
-      return response.json();
-    },
-    enabled: !!primaryEntity?.id && primaryEntity?.status === "PENDING",
-    refetchInterval: 5000, // Poll every 5 seconds
-  });
 
   // Fetch upcoming compliance
-  const { data: upcomingCompliance = [] } = useQuery<UpcomingCompliance[]>({
-    queryKey: ["compliance", "upcoming"],
-    queryFn: async () => {
-      const response = await fetch("/api/compliance/upcoming?limit=3");
-      if (!response.ok) throw new Error("Failed to fetch compliance");
-      const result = await response.json();
-      return result.data || [];
-    },
+  const { data: complianceResponse } = useSWR<{
+    success: boolean;
+    data: UpcomingCompliance[];
+  }>(primaryEntity ? "/api/compliance/upcoming?limit=3" : null, fetcher, {
+    revalidateOnFocus: false,
   });
+
+  const upcomingCompliance = complianceResponse?.data || [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    // TODO: Implement global search
     toast.info("Global search coming soon");
   };
 
   const countryFlags: Record<string, string> = {
     AE: "🇦🇪",
-    SA: "🇸🇦",
+    SA: "🇸��",
     EG: "🇪🇬",
   };
 
@@ -111,7 +88,7 @@ export default function DashboardPage() {
             {/* Left: Greeting & Time */}
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {getGreeting()}, {session?.user?.name?.split(" ")[0]}
+                {getGreeting()}, {session?.user?.name?.split(" ")[0] || "there"}
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {new Date().toLocaleDateString("en-US", {
@@ -193,8 +170,7 @@ export default function DashboardPage() {
                   Verifying Your Business Setup
                 </h3>
                 <p className="text-sm text-yellow-800 dark:text-yellow-300 mb-3">
-                  {verificationStatus?.estimatedTime ||
-                    "We're verifying your business details. This usually takes 5-10 minutes."}
+                  {"We're verifying your business details. This usually takes 5-10 minutes."}
                 </p>
                 <Button
                   variant="outline"
