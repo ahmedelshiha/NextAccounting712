@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 
-// Mock Prisma
+// Mock Prisma (default export)
 vi.mock('@/lib/prisma', () => ({
-  prisma: {
+  default: {
     attachment: {
       count: vi.fn(),
       findMany: vi.fn(),
