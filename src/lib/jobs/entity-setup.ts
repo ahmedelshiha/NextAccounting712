@@ -2,6 +2,7 @@ import { Redis } from "@upstash/redis";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { countryRegistry } from "@/lib/registries/countries";
+import { Redis } from '@upstash/redis';
 
 export type VerificationJobStatus = 
   | "PENDING_VERIFICATION"
