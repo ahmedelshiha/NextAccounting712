@@ -229,9 +229,9 @@ async function DELETE(
   }
 }
 
-export const getHandler = withTenantContext(GET, { requireAuth: true })
-export const patchHandler = withTenantContext(PATCH, { requireAuth: true })
-export const deleteHandler = withTenantContext(DELETE, { requireAuth: true })
+const getHandler = withTenantContext(GET, { requireAuth: true })
+const patchHandler = withTenantContext(PATCH, { requireAuth: true })
+const deleteHandler = withTenantContext(DELETE, { requireAuth: true })
 
 export { getHandler as GET, patchHandler as PATCH, deleteHandler as DELETE }
 
