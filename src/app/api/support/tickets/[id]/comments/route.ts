@@ -15,7 +15,7 @@ export const GET = withTenantContext(
       const { id } = params
 
       const ticket = await prisma.supportTicket.findFirst({
-        where: { id, tenantId },
+        where: { id, tenantId: tenantId! },
       })
 
       if (!ticket) {
@@ -23,7 +23,7 @@ export const GET = withTenantContext(
       }
 
       const comments = await prisma.supportTicketComment.findMany({
-        where: { ticketId: id, tenantId },
+        where: { ticketId: id, tenantId: tenantId! },
         include: { author: { select: { id: true, email: true, name: true } } },
         orderBy: { createdAt: 'asc' },
       })
@@ -46,7 +46,7 @@ export const POST = withTenantContext(
       const validated = CreateCommentSchema.parse(body)
 
       const ticket = await prisma.supportTicket.findFirst({
-        where: { id, tenantId },
+        where: { id, tenantId: tenantId! },
       })
 
       if (!ticket) {
@@ -56,7 +56,7 @@ export const POST = withTenantContext(
       const comment = await prisma.supportTicketComment.create({
         data: {
           ticketId: id,
-          tenantId,
+          tenantId: tenantId!,
           authorId: userId,
           content: validated.content,
         },
