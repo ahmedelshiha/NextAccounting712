@@ -180,7 +180,7 @@ describe('Compliance Rules Engine', () => {
     });
 
     it('should have appropriate due dates for obligations', () => {
-      const entity = mockEntity({ country: 'AE', type: 'company' });
+      const entity = mockEntity({ country: 'AE', metadata: { entityType: 'company' } });
       const obligations = calculateObligations(entity, { annualTurnover: 500000 });
 
       obligations.forEach((ob) => {
@@ -190,7 +190,7 @@ describe('Compliance Rules Engine', () => {
     });
 
     it('should calculate days until due correctly', () => {
-      const entity = mockEntity({ country: 'AE', type: 'company' });
+      const entity = mockEntity({ country: 'AE', metadata: { entityType: 'company' } });
       const obligations = calculateObligations(entity, { annualTurnover: 500000 });
 
       obligations.forEach((ob) => {
