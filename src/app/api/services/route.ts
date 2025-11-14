@@ -179,7 +179,13 @@ export const GET = withTenantContext(
   async (request: NextRequest) => {
     try {
       // userId is optional for public service browsing
-      const context = requireTenantContext();
+      let context;
+      try {
+        context = requireTenantContext();
+      } catch {
+        // Service catalog can be viewed without tenant context
+        context = { tenantId: null, userId: null };
+      }
 
       // Get query parameters
       const search = request.nextUrl.searchParams.get('search');
